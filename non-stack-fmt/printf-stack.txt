@@ -30,7 +30,7 @@
         1d:00e8│         0x7fffffffe1e8 —▸ 0x7fffffffe220 ◂— 0x1
         1e:00f0│         0x7fffffffe1f0 ◂— 0x0
         1f:00f8│         0x7fffffffe1f8 ◂— 0x0
-        20:0100│         0x7fffffffe200 ◂— 0x0
+%38$p   20:0100│         0x7fffffffe200 ◂— 0x0
         21:0108│         0x7fffffffe208 —▸ 0x4010b5 (_start+37) ◂— 0x841f0f2e66f4
         22:0110│         0x7fffffffe210 —▸ 0x7fffffffe218 ◂— 0x38 /* '8' */
         23:0118│         0x7fffffffe218 ◂— 0x38 /* '8' */

