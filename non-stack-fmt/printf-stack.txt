@@ -1,0 +1,48 @@
+%6$p    00:0000│ rbp rsp 0x7fffffffe100 —▸ 0x7fffffffe1a0 —▸ 0x7fffffffe200 ◂— 0x0
+%7$p    01:0008│         0x7fffffffe108 —▸ 0x7ffff7c2a1ca (__libc_start_call_main+122) ◂— mov edi, eax
+        02:0010│         0x7fffffffe110 —▸ 0x7fffffffe150 —▸ 0x403e00 (__do_global_dtors_aux_fini_array_entry) —▸ 0x401140 (__do_global_dtors_aux) ◂— 0x2f1d3d80fa1e0ff3
+%9$p    03:0018│         0x7fffffffe118 —▸ 0x7fffffffe228 —▸ 0x7fffffffe4c3 ◂— '/home/scetayh/Projects/pwn-study/non-stack-fmt/pwn'
+        04:0020│         0x7fffffffe120 ◂— 0x100400040 /* '@' */
+        05:0028│         0x7fffffffe128 —▸ 0x401176 (main) ◂— 0xe5894855fa1e0ff3
+        06:0030│         0x7fffffffe130 —▸ 0x7fffffffe228 —▸ 0x7fffffffe4c3 ◂— '/home/scetayh/Projects/pwn-study/non-stack-fmt/pwn'
+        07:0038│         0x7fffffffe138 ◂— 0x44d21262fcbec3f4
+        08:0040│         0x7fffffffe140 ◂— 0x1
+        09:0048│         0x7fffffffe148 ◂— 0x0
+        0a:0050│         0x7fffffffe150 —▸ 0x403e00 (__do_global_dtors_aux_fini_array_entry) —▸ 0x401140 (__do_global_dtors_aux) ◂— 0x2f1d3d80fa1e0ff3
+        0b:0058│         0x7fffffffe158 —▸ 0x7ffff7ffd000 (_rtld_global) —▸ 0x7ffff7ffe2e0 ◂— 0x0
+        0c:0060│         0x7fffffffe160 ◂— 0x44d21262fddec3f4
+        0d:0068│         0x7fffffffe168 ◂— 0x44d202187cfcc3f4
+        0e:0070│         0x7fffffffe170 ◂— 0x7fff00000000
+%21$p   0f:0078│         0x7fffffffe178 ◂— 0x0
+%22$p   10:0080│         0x7fffffffe180 ◂— 0x0
+        11:0088│         0x7fffffffe188 ◂— 0x1
+        12:0090│         0x7fffffffe190 —▸ 0x7fffffffe220 ◂— 0x1
+        13:0098│         0x7fffffffe198 ◂— 0xbfc9564130c13e00
+        14:00a0│         0x7fffffffe1a0 —▸ 0x7fffffffe200 ◂— 0x0
+        15:00a8│         0x7fffffffe1a8 —▸ 0x7ffff7c2a28b (__libc_start_main+139) ◂— mov r15, qword ptr [rip + 0x1d9cf6]
+        16:00b0│         0x7fffffffe1b0 —▸ 0x7fffffffe238 —▸ 0x7fffffffe4f6 ◂— 'SHELL=/bin/bash'
+        17:00b8│         0x7fffffffe1b8 —▸ 0x403e00 (__do_global_dtors_aux_fini_array_entry) —▸ 0x401140 (__do_global_dtors_aux) ◂— 0x2f1d3d80fa1e0ff3
+        18:00c0│         0x7fffffffe1c0 —▸ 0x7fffffffe238 —▸ 0x7fffffffe4f6 ◂— 'SHELL=/bin/bash'
+        19:00c8│         0x7fffffffe1c8 —▸ 0x401176 (main) ◂— 0xe5894855fa1e0ff3
+        1a:00d0│         0x7fffffffe1d0 ◂— 0x0
+        1b:00d8│         0x7fffffffe1d8 ◂— 0x0
+        1c:00e0│         0x7fffffffe1e0 —▸ 0x401090 (_start) ◂— 0x8949ed31fa1e0ff3
+        1d:00e8│         0x7fffffffe1e8 —▸ 0x7fffffffe220 ◂— 0x1
+        1e:00f0│         0x7fffffffe1f0 ◂— 0x0
+        1f:00f8│         0x7fffffffe1f8 ◂— 0x0
+        20:0100│         0x7fffffffe200 ◂— 0x0
+        21:0108│         0x7fffffffe208 —▸ 0x4010b5 (_start+37) ◂— 0x841f0f2e66f4
+        22:0110│         0x7fffffffe210 —▸ 0x7fffffffe218 ◂— 0x38 /* '8' */
+        23:0118│         0x7fffffffe218 ◂— 0x38 /* '8' */
+        24:0120│         0x7fffffffe220 ◂— 0x1
+%43$p   25:0128│ rbx     0x7fffffffe228 —▸ 0x7fffffffe4c3 ◂— '/home/scetayh/Projects/pwn-study/non-stack-fmt/pwn'
+        26:0130│         0x7fffffffe230 ◂— 0x0
+        27:0138│         0x7fffffffe238 —▸ 0x7fffffffe4f6 ◂— 'SHELL=/bin/bash'
+        28:0140│         0x7fffffffe240 —▸ 0x7fffffffe506 ◂— 'PWD=/home/scetayh/Projects/pwn-study/non-stack-fmt'
+        29:0148│         0x7fffffffe248 —▸ 0x7fffffffe539 ◂— 'LOGNAME=scetayh'
+        2a:0150│         0x7fffffffe250 —▸ 0x7fffffffe549 ◂— 'XDG_SESSION_TYPE=tty'
+        2b:0158│         0x7fffffffe258 —▸ 0x7fffffffe55e ◂— '_=/usr/bin/gdb'
+        2c:0160│         0x7fffffffe260 —▸ 0x7fffffffe56d ◂— 'LINES=59'
+        2d:0168│         0x7fffffffe268 —▸ 0x7fffffffe576 ◂— 'HOME=/home/scetayh'
+        2e:0170│         0x7fffffffe270 —▸ 0x7fffffffe589 ◂— 'LANG=en_US.UTF-8'
+        2f:0178│         0x7fffffffe278 —▸ 0x7fffffffe59a ◂— 0x524f4c4f435f534c ('LS_COLOR')
