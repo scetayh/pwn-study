@@ -138,52 +138,67 @@ B->(D+3)->0x40      #二联
 以上便成功把一个四字节的整形0x40302010写入了栈上
 
 > 摘要：A 在泄露其解引用后的内容 B 之后便无用了；得到 B 后，修改其解引用后的结果，将结果从内存中原样的 C 改为我们指定的 D 、D + 1 、D + 2 …… C 自始至终无用。然后修改 D 、D + 1 、D + 2 等解引用后的结果。因为D 本身就是地址，所以 + 0 / 1 / 2 后得到的必然是连续地址，解引用后必然为相邻连续空间，因而可以复写较长的连续内容。
+>
 > 整个过程中，被修改的有 C（通过 B）、D + n（通过 B）、D + n 解引用后的内容（通过 D + n ）。A 和 B 没有被修改。
+>
 > 无法直接修改 B 为 D + n 。B 是 A 解引用后的结果，倘要修改 B ，需要对 A 操作。而我们使用的 payload 是 `%{value}c%${arg}n` ，`{arg}` 确实定为 9 ，即 A（`03:0018`），但 payload 发送后将被类似于解两次引用，得到 C 而非 B 。这也是寻找可用三联的原因；二联环数不足，只有三联才能兜底到 C 。
 
 > **兹洛瓦恩公式**　一般地，将单字节、双字节或四字节 `value`（ `value != 0` ）写入地址 `addr`（或者说用 `value` 替换地址 `addr` 解引用后的内容）：
+>
 > `snd(f"%{value}c", "%{pos + 6}${fmt}")`
+>
 > 其中：
-> `pos` 为 `addr` 在栈上的地址与栈基址的字节差（即比特位差的八分之一）；
-> 当 `value` 分别为单字节、双字节和四字节时，`fmt` 分别为 `n` 、`hn` 、`hhn` 。
+>
+> - `pos` 为 `addr` 在栈上的地址与栈基址的字节差（即比特位差的八分之一）；
+> - 当 `value` 分别为单字节、双字节和四字节时，`fmt` 分别为 `n` 、`hn` 、`hhn` 。
+>
 > 特殊地，当 `value != 0` 时：
+>
 > `snd("%{pos + 6}${fmt}")`
-> 一般记兹洛瓦恩公式为函数 `zeeroone(value, pos, fmt)` 。
+>
+> 一般记兹洛瓦恩公式为函数 `zlovan(value, pos, fmt)` 。
 
 > 例如，想把 `rbp+5` 所存地址解引用后的内容从 `0xffffffff1234` 改为 `0xffffffffab34` ，那么：
+>
 > `snd("%43828c", "%11$hn")`（0xab34 = 43828）
+>
 > 或者：
+>
 > `value = 0xab34`
+>
 > `snd(f"%{value}c", "%11$hn"`
 
 > **兹洛瓦恩公式的逆用**　相反地，对于语句：
+>
 > `snd("%{v1}c", "%{v2}${v3}")`
+>
 > 其功能是将 `v3` 对应字节的值 `v1`写入栈基址上方 `v2 - 6` 字节处所存的地址处（或者说用 `v3` 对应字节的值 `v1` 写入栈基址上方 `v2 - 6` 字节处所存的地址解引用后的内容）。
 
 > 例如，对于语句：
+>
 > `snd(f"%{empty_stack & 0xffff}c", "%9$hn")`
+>
 > 其功能是将 `empty_stack` 的较低两位（即 16 比特）写入栈基址上方 3 字节处（即 `rbp+3` ）所存的地址处。
 
 > **兹洛瓦恩复合公式**　一般地，将 `n` 字节 `value` 写入地址 `addr`（或者说用 `value` 替换地址 `addr` 解引用后的内容）：
-> `zeeroone(addr_lowpos + 0, pos1, fmt)`
-> `zeeroone((value >> 0) && 0xff, pos2, "hhn")`
-> `zeeroone(addr_lowpos + 1, pos1, fmt)`
-> `zeeroone((value >> 8) && 0xff, pos2, "hhn")`
-> `zeeroone(addr_lowpos + 2, pos1, fmt)`
-> `zeeroone((value >> 16) && 0xff, pos2, "hhn")`
-> `...`
-> `zeeroone(addr_lowpos + n - 1, pos1, fmt)`
-> `zeeroone((value >> (8 * (n - 1))) && 0xff, pos2, "hhn")`
-> 其中：
-> `addr_lowpos` 为 `addr` 的较低一位、两位或四位（即 8 、16 或 32 比特）；
-> `pos1` 为 `addr` 在栈上的地址（三联地址）与栈基址的字节差；
-> `fmt` 取决于 `addr_lowpos` 。
-> `pos2` 为 `addr`（二联地址）与栈基址的字节差；
-> 只有当 `addr` 除 `addr_lowpos` 以外的各个位与**其所在的兹洛瓦恩公式中的形参 `addr` 解引用后的内容**所对应的各个位均相同时，兹洛瓦恩复合公式才成立。
-> 一般记兹洛瓦恩复合公式为函数 `zeeroonecompos(n, addr_lowpos, pos1, fmt, pos2)` ，其定义为：
+>
 > `for i in range(n):`
-> `    zeeroone(addr_lowpos + i - 1, pos1, fmt)`
-> `    zeeroone((value >> (8 * (i - 1))) && 0xff, pos2, "hhn")`
+>
+> `    zlovan(addr_lowpos + i - 1, pos1, fmt)`
+>
+> `    zlovan((value >> (8 * (i - 1))) && 0xff, pos2, "hhn")`
+>
+> 其中：
+>
+> - `addr_lowpos` 为 `addr` 的较低一位、两位或四位（即 8 、16 或 32 比特）；
+> - `pos1` 为 `addr` 在栈上的地址（三联地址）与栈基址的字节差；
+> - `fmt` 取决于 `addr_lowpos` 。
+> - `pos2` 为 `addr`（二联地址）与栈基址的字节差；
+>
+> 只有当 `addr` 除 `addr_lowpos` 以外的各个位与**其所在的兹洛瓦恩公式中的形参 `addr` 解引用后的内容**所对应的各个位均相同时，兹洛瓦恩复合公式才成立。
+>
+> 一般记兹洛瓦恩复合公式为函数 `zlovancompos(n, addr_lowpos, pos1, fmt, pos2)` 。
+
 
 ## 回到gdb中
 
