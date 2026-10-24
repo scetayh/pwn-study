@@ -145,16 +145,16 @@ B->(D+3)->0x40      #二联
 
 > **兹洛瓦恩公式**　一般地，将单字节、双字节或四字节 `value`（ `value != 0` ）写入地址 `addr`（或者说用 `value` 替换地址 `addr` 解引用后的内容）：
 >
-> `snd(f"%{value}c", "%{pos + 6}${fmt}")`
+> `snd(f"%{value}c", f"%{pos + 6}${fmt}")`
 >
 > 其中：
 >
 > - `pos` 为 `addr` 在栈上的地址与栈基址的字节差（即比特位差的八分之一）；
 > - 当 `value` 分别为单字节、双字节和四字节时，`fmt` 分别为 `n` 、`hn` 、`hhn` 。
 >
-> 特殊地，当 `value != 0` 时：
+> 特殊地，当 `value == 0` 时：
 >
-> `snd("%{pos + 6}${fmt}")`
+> `snd(f"%{pos + 6}${fmt}")`
 >
 > 一般记兹洛瓦恩公式为函数 `zlovan(value, pos, fmt)` 。
 
@@ -184,9 +184,9 @@ B->(D+3)->0x40      #二联
 >
 > `for i in range(n):`
 >
-> `    zlovan(addr_lowpos + i - 1, pos1, fmt)`
+> `    zlovan(addr_lowpos + i, pos1, fmt)`
 >
-> `    zlovan((value >> (8 * (i - 1))) && 0xff, pos2, "hhn")`
+> `    zlovan((value >> (8 * i)) & 0xff, pos2, "hhn")`
 >
 > 其中：
 >
@@ -197,7 +197,7 @@ B->(D+3)->0x40      #二联
 >
 > 只有当 `addr` 除 `addr_lowpos` 以外的各个位与**其所在的兹洛瓦恩公式中的形参 `addr` 解引用后的内容**所对应的各个位均相同时，兹洛瓦恩复合公式才成立。
 >
-> 一般记兹洛瓦恩复合公式为函数 `zlovancompos(n, addr_lowpos, pos1, fmt, pos2)` 。
+> 一般记兹洛瓦恩复合公式为函数 `zlovancompos(n, addr_lowpos, pos1, fmt, value, pos2)` 。
 
 
 ## 回到gdb中

